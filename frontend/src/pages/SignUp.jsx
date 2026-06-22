@@ -7,14 +7,6 @@ const SignUpPage = () => {
       {/* LEFT SIDE: Brand Hero Section */}
       <div className='relative flex flex-col items-center justify-center w-1/2 h-full bg-[#4F46E5] text-center p-16 select-none'>
         
-        {/* Wallet Icon Box Wrapper (SVG Wallet) */}
-        {/* <div className='bg-white/10 p-3 rounded-2xl border border-white/10 mb-6 shadow-inner flex items-center justify-center'>
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2 2 0 00-2-2H7a2 2 0 00-2 2v4a2 2 0 002 2h12a2 2 0 002-2v-4z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M16 10V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18 14h.01" />
-          </svg>
-        </div> */}
 
         <h1 className='text-4xl text-[#DAD7FF] font-bold tracking-tight'>Master your capital.</h1>
         

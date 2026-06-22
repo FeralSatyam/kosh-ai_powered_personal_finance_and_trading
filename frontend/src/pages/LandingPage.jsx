@@ -7,7 +7,7 @@ const LandingPage = () => {
       {/* 1. NAVIGATION BAR */}
       <nav className='w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md sticky top-0 z-50 px-8 lg:px-16 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900'>
-          FinanceFlow
+          Kosh
         </div>
         
         <div className='hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600'>
