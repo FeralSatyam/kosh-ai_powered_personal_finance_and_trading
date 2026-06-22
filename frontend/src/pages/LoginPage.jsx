@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 const LoginPage = () => {
   return (
     <div className='flex w-screen h-screen overflow-hidden font-sans bg-white'>
@@ -130,7 +130,9 @@ const LoginPage = () => {
           {/* Registration Prompt Link */}
           <p className='text-center text-sm text-slate-500 mt-8'>
             Don't have an account?{' '}
-            <a href='#signup' className='font-bold text-[#4F46E5] hover:underline'>Create an account</a>
+            <Link to={'/signup'} className='font-bold text-[#4F46E5] hover:underline'>
+                Create an account
+            </Link>
           </p>
 
         </div>
