@@ -1,5 +1,29 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
+import axios from 'axios'
+import { useState } from 'react';
+import { use } from 'react';
+
+const Register = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  })
+}
+
+const handleSubmit = async (e) => {
+  axios.preventDefault()
+  try{
+    const response = await axios.post('http://5000/api/users/register', formData)
+    console.log("Registered sucessfully!", response.data);
+    
+  }
+  catch (error) {
+    console.log("Error creating account", error);
+  }
+}
+
 const SignUpPage = () => {
   return (
     <div className='flex w-screen h-screen overflow-hidden font-sans bg-white'>
@@ -115,7 +139,7 @@ const SignUpPage = () => {
             </div>
 
             {/* Primary Sign Up Button */}
-            <button className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
+            <button onSubmit={handleSubmit} className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
               Create Account
             </button>
           </form>
