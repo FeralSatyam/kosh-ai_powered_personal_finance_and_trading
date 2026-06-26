@@ -1,8 +1,7 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
-
+import bcrypt from 'bcrypt'
+import { configDotenv } from 'dotenv'
 const salt = 10
-const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -13,7 +12,9 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -33,9 +34,9 @@ userSchema.pre('save', async function(next) {
 
 //Compare password with hashed password
 userSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.comparePassword(candidatePassword, this.password)
+    return await bcrypt.compare(candidatePassword, this.password)
 }
 
 
-const User = mongoose.connect('User', userSchema)
+const User = mongoose.model('User', userSchema)
 export default User

@@ -4,18 +4,26 @@ import axios from 'axios'
 import { useState } from 'react';
 import { use } from 'react';
 
-const Register = () => {
+const SignUpPage = () => {
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   })
+
+const handleChange = (e) => {
+  const {name, value} = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: value
+  }))
 }
 
 const handleSubmit = async (e) => {
-  axios.preventDefault()
+  e.preventDefault()
   try{
-    const response = await axios.post('http://5000/api/users/register', formData)
+    const response = await axios.post('http://localhost:5000/api/users/register', formData)
     console.log("Registered sucessfully!", response.data);
     
   }
@@ -24,7 +32,6 @@ const handleSubmit = async (e) => {
   }
 }
 
-const SignUpPage = () => {
   return (
     <div className='flex w-screen h-screen overflow-hidden font-sans bg-white'>
       
@@ -76,7 +83,7 @@ const SignUpPage = () => {
           <h2 className='text-3xl font-bold text-slate-900 tracking-tight'>Create your account</h2>
           <p className='text-slate-500 text-sm mt-1'>Get started with your precision financial dashboard today.</p>
 
-          <form className='mt-6 flex flex-col gap-4' onSubmit={(e) => e.preventDefault()}>
+          <form className='mt-6 flex flex-col gap-4' >
             
             {/* Full Name Field */}
             <div className='flex flex-col gap-1.5'>
@@ -139,7 +146,7 @@ const SignUpPage = () => {
             </div>
 
             {/* Primary Sign Up Button */}
-            <button onSubmit={handleSubmit} className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
+            <button onClick={handleSubmit} className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
               Create Account
             </button>
           </form>
