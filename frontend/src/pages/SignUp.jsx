@@ -1,10 +1,11 @@
 import React from 'react';
-import {Link, Navigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import { useState } from 'react';
 
+
 const SignUpPage = () => {
-  
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -26,8 +27,9 @@ const handleSubmit = async (e) => {
   
   try{
     const response = await axios.post('http://localhost:5000/api/users/register', formData)
-    console.log("Registered sucessfully!", response.data);
-    Navigate('/dashboard')
+    localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    navigate('/dashboard')
   }
   catch (error) {
     console.log("Error creating account", error);

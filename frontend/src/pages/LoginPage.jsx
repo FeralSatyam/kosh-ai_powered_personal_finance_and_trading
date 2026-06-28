@@ -1,17 +1,52 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    console.log("Handle change called");
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      navigate('/dashboard');
+      
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className='flex w-screen h-screen overflow-hidden font-sans bg-white'>
       
       {/* LEFT SIDE: Brand Hero Section */}
       <div className='relative flex flex-col items-center justify-center w-1/2 h-full bg-[#4F46E5] text-center p-16 select-none'>
-        
-        {/* Wallet Icon Box Wrapper */}
-        
-
         <h1 className='text-4xl text-[#DAD7FF] font-bold tracking-tight'>Master your capital.</h1>
-        
         <p className='text-[#DAD7FF]/80 mt-4 text-sm max-w-md leading-relaxed'>
           Securely manage your assets, analyze market trends, and build your financial legacy with FinanceFlow's precision-engineered dashboard.
         </p>
@@ -24,7 +59,6 @@ const LoginPage = () => {
               <p className="text-xl font-bold mt-0.5">$482,921.40</p>
             </div>
             
-            {/* Trend Indicator Badge */}
             <div className="bg-[#6CF8BB]/20 px-2.5 py-1 rounded-full flex items-center gap-1">
               <svg className="w-3 h-3 text-[#6FFBBE]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -42,10 +76,7 @@ const LoginPage = () => {
             <div className="w-full bg-[#DAD7FF] h-[90%] rounded-sm"></div>
           </div>
         </div>
-
-    
       </div>
-
 
       {/* RIGHT SIDE: Authentication Form Section */}
       <div className='flex flex-col justify-center items-center w-1/2 h-full bg-[#FAFAFA] px-24'>
@@ -54,7 +85,14 @@ const LoginPage = () => {
           <h2 className='text-3xl font-bold text-slate-900 tracking-tight'>Welcome back</h2>
           <p className='text-slate-500 text-sm mt-1'>Please enter your details to sign in to your account.</p>
 
-          <form className='mt-8 flex flex-col gap-5' onSubmit={(e) => e.preventDefault()}>
+          {/* ✅ Error message display */}
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
+          <form className='mt-8 flex flex-col gap-5' onSubmit={handleSubmit}>
             
             {/* Email Field */}
             <div className='flex flex-col gap-1.5'>
@@ -64,7 +102,10 @@ const LoginPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <input 
-                  type='email' 
+                  type='email'
+                  name='email'
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder='name@company.com' 
                   className='w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-slate-300 text-slate-800' 
                 />
@@ -82,7 +123,10 @@ const LoginPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 <input 
-                  type='password' 
+                  type='password'
+                  name='password'
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder='••••••••' 
                   className='w-full pl-11 pr-11 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-slate-300 text-slate-800' 
                 />
@@ -105,9 +149,13 @@ const LoginPage = () => {
               </label>
             </div>
 
-            {/* Primary Sign In Button */}
-            <button className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
-              Sign In
+            {/* ✅ Button with loading state */}
+            <button 
+              type='submit'
+              disabled={loading}
+              className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2 disabled:opacity-50 disabled:cursor-not-allowed'
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
@@ -122,7 +170,6 @@ const LoginPage = () => {
           {/* OAuth Social Buttons Grid */}
           <div className='grid grid-cols-1 gap-4'>
             <button className='flex items-center justify-center gap-2 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all'>
-              
               Google
             </button>
           </div>
@@ -131,7 +178,7 @@ const LoginPage = () => {
           <p className='text-center text-sm text-slate-500 mt-8'>
             Don't have an account?{' '}
             <Link to={'/signup'} className='font-bold text-[#4F46E5] hover:underline'>
-                Create an account
+              Create an account
             </Link>
           </p>
 
@@ -139,7 +186,7 @@ const LoginPage = () => {
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
