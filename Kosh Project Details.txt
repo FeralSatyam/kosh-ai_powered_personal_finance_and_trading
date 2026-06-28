@@ -1,0 +1,795 @@
+Here's a comprehensive Notion-ready document with everything you need to complete your Kosh - AI Powered Personal Finance & Trading application:
+
+---
+
+# 🚀 Kosh - AI Powered Personal Finance & Trading: Complete Development Roadmap
+
+## 📊 Project Overview
+
+**Project Name:** Kosh - AI Powered Personal Finance & Trading
+**Tech Stack:** MERN (MongoDB, Express.js, React, Node.js)
+**Goal:** A complete personal finance management application with AI-powered insights
+
+---
+
+## ✅ COMPLETED TASKS
+
+### Frontend Foundation
+- [x] Project setup with Vite
+- [x] Tailwind CSS configuration
+- [x] React Router setup
+- [x] Authentication pages (Login, Signup)
+- [x] Dashboard UI with mock data
+- [x] Form validation and state management
+- [x] API integration with Axios
+
+### Backend Foundation
+- [x] Node.js + Express setup
+- [x] MongoDB connection (Mongoose)
+- [x] User model with password hashing
+- [x] JWT authentication
+- [x] Login controller
+- [x] Signup controller
+- [x] Auth routes
+- [x] Environment variables configuration
+- [x] CORS setup
+
+### Authentication
+- [x] User registration
+- [x] User login
+- [x] JWT token generation
+- [x] Password hashing with bcrypt
+- [x] Protected routes (frontend)
+- [x] Token storage in localStorage
+- [x] Logout functionality
+- [x] Auth error handling
+
+---
+
+## 🔴 PHASE 1: BACKEND ENHANCEMENTS
+
+### 1.1 Transaction Model
+**📁 File:** `backend/src/models/Transaction.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 1 hour
+
+**Tasks:**
+- [ ] Create Transaction schema with:
+  - `user` (ObjectId, ref: 'User', required)
+  - `amount` (Number, required)
+  - `description` (String, required, trim)
+  - `category` (String, enum, default: 'Other')
+  - `type` (String, enum: ['income', 'expense', 'transfer'], required)
+  - `date` (Date, default: Date.now)
+  - `aiProcessed` (Boolean, default: false)
+  - `aiConfidence` (Number, min: 0, max: 1)
+  - `notes` (String, trim)
+- [ ] Add indexes for performance (user, date)
+- [ ] Export model
+
+**Example Schema:**
+```javascript
+const transactionSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    amount: { type: Number, required: true },
+    description: { type: String, required: true, trim: true },
+    category: { 
+        type: String, 
+        enum: ['Food', 'Rent', 'Utilities', 'Entertainment', 'Transport', 'Shopping', 'Healthcare', 'Education', 'Income', 'Other'],
+        default: 'Other'
+    },
+    type: { type: String, enum: ['income', 'expense', 'transfer'], required: true },
+    date: { type: Date, default: Date.now },
+    aiProcessed: { type: Boolean, default: false },
+    aiConfidence: { type: Number, min: 0, max: 1 },
+    notes: { type: String, trim: true }
+});
+
+transactionSchema.index({ user: 1, date: -1 });
+```
+
+---
+
+### 1.2 Transaction Controllers
+**📁 File:** `backend/src/controllers/transactionController.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Create `createTransaction` - Add new transaction
+- [ ] Create `getTransactions` - Get all user transactions with pagination
+- [ ] Create `getTransactionById` - Get single transaction
+- [ ] Create `updateTransaction` - Update transaction
+- [ ] Create `deleteTransaction` - Delete transaction
+- [ ] Create `getTransactionStats` - Get aggregated stats
+- [ ] Add validation for all functions
+- [ ] Add error handling
+- [ ] Add logging
+
+**Key Functions to Implement:**
+```javascript
+// Create a new transaction
+export const createTransaction = async (req, res) => { ... }
+
+// Get all transactions for a user (with pagination)
+export const getTransactions = async (req, res) => { ... }
+
+// Get a single transaction by ID
+export const getTransactionById = async (req, res) => { ... }
+
+// Update a transaction
+export const updateTransaction = async (req, res) => { ... }
+
+// Delete a transaction
+export const deleteTransaction = async (req, res) => { ... }
+
+// Get transaction stats (balance, income, expenses)
+export const getTransactionStats = async (req, res) => { ... }
+```
+
+---
+
+### 1.3 Transaction Routes
+**📁 File:** `backend/src/routes/transactionRoutes.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 30 minutes
+
+**Tasks:**
+- [ ] Create routes:
+  - `POST /` - Create transaction
+  - `GET /` - Get all transactions
+  - `GET /stats` - Get transaction stats
+  - `GET /:id` - Get single transaction
+  - `PUT /:id` - Update transaction
+  - `DELETE /:id` - Delete transaction
+- [ ] Add authentication middleware to all routes
+- [ ] Register routes in server.js
+
+```javascript
+// Route structure
+import express from 'express';
+import { 
+    createTransaction,
+    getTransactions,
+    getTransactionById,
+    updateTransaction,
+    deleteTransaction,
+    getTransactionStats
+} from '../controllers/transactionController.js';
+import { protect } from '../middleware/auth.js';
+
+const router = express.Router();
+
+router.route('/')
+    .post(protect, createTransaction)
+    .get(protect, getTransactions);
+
+router.get('/stats', protect, getTransactionStats);
+router.route('/:id')
+    .get(protect, getTransactionById)
+    .put(protect, updateTransaction)
+    .delete(protect, deleteTransaction);
+
+export default router;
+```
+
+---
+
+### 1.4 Dashboard Controller
+**📁 File:** `backend/src/controllers/dashboardController.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 1.5 hours
+
+**Tasks:**
+- [ ] Create `getDashboardData` - Complete dashboard data
+- [ ] Use MongoDB aggregation for stats
+- [ ] Calculate:
+  - Total balance
+  - Total income (current month)
+  - Total expenses (current month)
+  - Recent transactions (last 10)
+  - Spending by category
+  - Monthly trends
+
+**Aggregation Pipeline Example:**
+```javascript
+const totalIncome = await Transaction.aggregate([
+    { $match: { user: userId, type: 'income' } },
+    { $group: { _id: null, total: { $sum: '$amount' } } }
+]);
+
+const totalExpenses = await Transaction.aggregate([
+    { $match: { user: userId, type: 'expense' } },
+    { $group: { _id: null, total: { $sum: '$amount' } } }
+]);
+
+const recentTransactions = await Transaction.find({ user: userId })
+    .sort({ date: -1 })
+    .limit(10);
+```
+
+---
+
+### 1.5 Dashboard Routes
+**📁 File:** `backend/src/routes/dashboardRoutes.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 15 minutes
+
+**Tasks:**
+- [ ] Create route: `GET /` - Get dashboard data
+- [ ] Add authentication middleware
+- [ ] Register route in server.js
+
+```javascript
+import express from 'express';
+import { getDashboardData } from '../controllers/dashboardController.js';
+import { protect } from '../middleware/auth.js';
+
+const router = express.Router();
+router.get('/', protect, getDashboardData);
+export default router;
+```
+
+---
+
+### 1.6 Update Server.js
+**📁 File:** `backend/server.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 15 minutes
+
+**Tasks:**
+- [ ] Import all routes
+- [ ] Register routes:
+  - `/api/auth` - Auth routes
+  - `/api/users` - User routes
+  - `/api/transactions` - Transaction routes
+  - `/api/dashboard` - Dashboard routes
+
+```javascript
+import authRoutes from './src/routes/authRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
+import transactionRoutes from './src/routes/transactionRoutes.js';
+import dashboardRoutes from './src/routes/dashboardRoutes.js';
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+```
+
+---
+
+## 🔴 PHASE 2: BACKEND AI INTEGRATION
+
+### 2.1 AI Service Setup
+**📁 File:** `backend/src/services/aiService.js`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 3 hours
+
+**Tasks:**
+- [ ] Install OpenAI package: `npm install openai`
+- [ ] Add OpenAI API key to .env
+- [ ] Create AI categorization function
+- [ ] Create spending insights function
+- [ ] Create anomaly detection function
+
+**AI Features to Implement:**
+```javascript
+// Transaction categorization
+export const categorizeTransaction = async (description, amount) => { ... }
+
+// Generate spending insights
+export const generateInsights = async (transactions) => { ... }
+
+// Detect anomalies
+export const detectAnomalies = async (transactions) => { ... }
+
+// Budget recommendations
+export const getBudgetRecommendations = async (transactions) => { ... }
+```
+
+---
+
+### 2.2 AI Controllers
+**📁 File:** `backend/src/controllers/aiController.js`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Create `categorizeTransaction` endpoint
+- [ ] Create `getInsights` endpoint
+- [ ] Create `detectAnomalies` endpoint
+- [ ] Add error handling
+- [ ] Add response caching (optional)
+
+---
+
+### 2.3 AI Routes
+**📁 File:** `backend/src/routes/aiRoutes.js`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 30 minutes
+
+**Tasks:**
+- [ ] Create routes:
+  - `POST /categorize` - Categorize transaction
+  - `GET /insights` - Get AI insights
+  - `POST /anomalies` - Detect anomalies
+- [ ] Add authentication middleware
+
+---
+
+## 🔴 PHASE 3: FRONTEND ENHANCEMENTS
+
+### 3.1 API Service Layer
+**📁 File:** `frontend/src/api/axios.js`
+
+**Status:** ✅ Completed
+
+**Tasks:**
+- [x] Create axios instance
+- [x] Add token interceptor
+- [x] Add response interceptor for 401 handling
+
+---
+
+### 3.2 Dashboard API Calls
+**📁 File:** `frontend/src/api/dashboard.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 1 hour
+
+**Tasks:**
+- [ ] Create `getDashboardData` function
+- [ ] Create `getStats` function
+- [ ] Create `getRecentTransactions` function
+
+```javascript
+import api from './axios';
+
+export const getDashboardData = async () => {
+    const response = await api.get('/dashboard');
+    return response.data;
+};
+
+export const getStats = async () => {
+    const response = await api.get('/transactions/stats');
+    return response.data;
+};
+
+export const getRecentTransactions = async (limit = 10) => {
+    const response = await api.get(`/transactions?limit=${limit}`);
+    return response.data;
+};
+```
+
+---
+
+### 3.3 Transaction API Calls
+**📁 File:** `frontend/src/api/transactions.js`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 1 hour
+
+**Tasks:**
+- [ ] Create CRUD functions for transactions
+
+```javascript
+import api from './axios';
+
+export const createTransaction = async (data) => {
+    const response = await api.post('/transactions', data);
+    return response.data;
+};
+
+export const getTransactions = async (params = {}) => {
+    const response = await api.get('/transactions', { params });
+    return response.data;
+};
+
+export const updateTransaction = async (id, data) => {
+    const response = await api.put(`/transactions/${id}`, data);
+    return response.data;
+};
+
+export const deleteTransaction = async (id) => {
+    const response = await api.delete(`/transactions/${id}`);
+    return response.data;
+};
+```
+
+---
+
+### 3.4 Update Dashboard with Real Data
+**📁 File:** `frontend/src/pages/DashboardPage.jsx`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Replace mock data with real API data
+- [ ] Add loading state
+- [ ] Add error handling
+- [ ] Implement automatic data refresh
+- [ ] Add transaction creation modal
+- [ ] Add date filtering
+
+**Key Features to Add:**
+```javascript
+// State management
+const [stats, setStats] = useState({ balance: 0, income: 0, expenses: 0 });
+const [transactions, setTransactions] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+
+// Fetch data
+useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const data = await getDashboardData();
+            setStats(data.stats);
+            setTransactions(data.transactions);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchData();
+}, []);
+```
+
+---
+
+### 3.5 Transaction Management Page
+**📁 File:** `frontend/src/pages/TransactionsPage.jsx`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 3 hours
+
+**Tasks:**
+- [ ] Create transactions list view
+- [ ] Add search functionality
+- [ ] Add filter by category
+- [ ] Add filter by date range
+- [ ] Add pagination
+- [ ] Create add transaction modal
+- [ ] Create edit transaction modal
+- [ ] Add delete confirmation dialog
+
+**UI Components Needed:**
+- [ ] Transaction list with cards
+- [ ] Search bar
+- [ ] Category filter dropdown
+- [ ] Date range picker
+- [ ] Add transaction button
+- [ ] Edit/Delete buttons for each transaction
+
+---
+
+### 3.6 Insights Page
+**📁 File:** `frontend/src/pages/InsightsPage.jsx`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 4 hours
+
+**Tasks:**
+- [ ] Create insights page
+- [ ] AI-powered spending analysis
+- [ ] Category breakdown charts
+- [ ] Monthly trends
+- [ ] Budget recommendations
+- [ ] Anomaly detection alerts
+
+**Libraries to Install:**
+```bash
+npm install recharts    # For charts
+npm install date-fns    # For date handling
+```
+
+---
+
+### 3.7 Add Transaction Modal
+**📁 File:** `frontend/src/components/TransactionModal.jsx`
+
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Create modal component
+- [ ] Add form fields:
+  - Amount (number)
+  - Description (text)
+  - Category (dropdown)
+  - Type (income/expense toggle)
+  - Date (date picker)
+  - Notes (textarea)
+- [ ] Add form validation
+- [ ] Add submit handler
+- [ ] Add loading state
+- [ ] Close on success
+
+---
+
+## 🔴 PHASE 4: FRONTEND AI INTEGRATION
+
+### 4.1 AI API Calls
+**📁 File:** `frontend/src/api/ai.js`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 1 hour
+
+**Tasks:**
+- [ ] Create `getInsights` function
+- [ ] Create `categorizeTransaction` function
+- [ ] Create `detectAnomalies` function
+
+```javascript
+import api from './axios';
+
+export const getInsights = async () => {
+    const response = await api.get('/ai/insights');
+    return response.data;
+};
+
+export const categorizeTransaction = async (data) => {
+    const response = await api.post('/ai/categorize', data);
+    return response.data;
+};
+
+export const detectAnomalies = async () => {
+    const response = await api.post('/ai/anomalies');
+    return response.data;
+};
+```
+
+---
+
+### 4.2 AI Insights Component
+**📁 File:** `frontend/src/components/InsightsCard.jsx`
+
+**Status:** ⬜ Not Started
+**Priority:** Medium
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Create AI insights component
+- [ ] Display spending patterns
+- [ ] Show budget recommendations
+- [ ] Show anomaly alerts
+- [ ] Add refresh button
+
+---
+
+## 🔴 PHASE 5: TESTING & DEPLOYMENT
+
+### 5.1 Backend Testing
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 3 hours
+
+**Tasks:**
+- [ ] Test all endpoints with Postman
+- [ ] Test authentication flow
+- [ ] Test validation
+- [ ] Test error handling
+- [ ] Test database operations
+
+**Test Scenarios:**
+- [ ] Create user → Login → Get user
+- [ ] Create transaction → Get transactions → Get stats
+- [ ] Update transaction → Delete transaction
+- [ ] Invalid input handling
+- [ ] Token expiration handling
+
+---
+
+### 5.2 Frontend Testing
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 2 hours
+
+**Tasks:**
+- [ ] Test signup flow
+- [ ] Test login flow
+- [ ] Test dashboard load
+- [ ] Test transaction CRUD
+- [ ] Test error handling
+- [ ] Test logout functionality
+- [ ] Test protected routes
+
+---
+
+### 5.3 Deployment
+**Status:** ⬜ Not Started
+**Priority:** High
+**Estimated Time:** 3 hours
+
+**Tasks:**
+- [ ] Set up MongoDB Atlas
+- [ ] Deploy backend (Render/Railway)
+- [ ] Deploy frontend (Vercel/Netlify)
+- [ ] Configure environment variables
+- [ ] Set up domain (optional)
+- [ ] SSL configuration (if needed)
+
+**Deployment Steps:**
+1. Create MongoDB Atlas cluster
+2. Get connection string
+3. Create .env.production files
+4. Deploy backend
+5. Deploy frontend
+6. Test production build
+
+---
+
+## 🎯 MILESTONES
+
+### Milestone 1: Basic CRUD ✅
+- [x] User auth
+- [x] Login/Register
+- [ ] Transaction CRUD
+
+### Milestone 2: Dashboard ✅
+- [x] Dashboard UI
+- [ ] Real data integration
+- [ ] Stats display
+
+### Milestone 3: AI Features
+- [ ] Transaction categorization
+- [ ] Spending insights
+- [ ] Anomaly detection
+
+### Milestone 4: Full Release
+- [ ] All features complete
+- [ ] Testing complete
+- [ ] Deployed to production
+
+---
+
+## 📦 DEPENDENCIES TO INSTALL
+
+### Backend
+```bash
+npm install jsonwebtoken bcrypt mongoose express cors dotenv
+npm install openai  # For AI features
+npm install nodemon -D  # Development
+```
+
+### Frontend
+```bash
+npm install axios react-router-dom
+npm install recharts  # For charts
+npm install date-fns  # For date handling
+npm install react-hook-form  # For forms (optional)
+```
+
+---
+
+## 🔑 ENVIRONMENT VARIABLES
+
+### Backend (.env)
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb://localhost:27017/kosh
+JWT_SECRET=your_super_secret_key_here
+JWT_EXPIRES_IN=7d
+BCRYPT_SALT_ROUNDS=10
+
+# AI
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_CLOUD_API_KEY=your_google_cloud_api_key
+```
+
+### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_AI_ENABLED=true
+```
+
+---
+
+## 📝 HELPFUL COMMANDS
+
+### Backend
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Run production server
+npm start
+
+# Run tests
+npm test
+```
+
+### Frontend
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+---
+
+## 🚀 QUICK START - WHAT TO DO NOW
+
+1. **Install remaining dependencies**
+2. **Create Transaction model**
+3. **Create Transaction controllers**
+4. **Create Transaction routes**
+5. **Test with Postman**
+6. **Connect frontend to real API**
+7. **Add AI features**
+
+---
+
+## 📊 TIMELINE ESTIMATE
+
+| Phase | Tasks | Time |
+|-------|-------|------|
+| Backend Core | Models, Controllers, Routes | 6 hours |
+| AI Integration | AI Service, Controllers | 5 hours |
+| Frontend Core | API, Dashboard, Transactions | 6 hours |
+| Frontend AI | Insights, Components | 4 hours |
+| Testing | All features | 5 hours |
+| Deployment | Production setup | 3 hours |
+| **Total** | | **~29 hours** |
+
+---
+
+## 🎯 NEXT STEPS
+
+### Immediate Actions:
+1. [ ] Install missing dependencies
+2. [ ] Create Transaction model
+3. [ ] Create Transaction controllers
+4. [ ] Create Transaction routes
+5. [ ] Test with Postman
+
+### By End of Week:
+1. [ ] Complete all backend APIs
+2. [ ] Connect frontend to APIs
+3. [ ] Start AI integration
+
+---
+
+**Built with ❤️ by Satyam Rana**
+
+*"Master your capital. Build your legacy."*
