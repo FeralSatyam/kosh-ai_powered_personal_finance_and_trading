@@ -1,11 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
+import {Link, Navigate} from 'react-router-dom'
 import axios from 'axios'
 import { useState } from 'react';
-import { use } from 'react';
 
 const SignUpPage = () => {
-
+  
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -13,6 +12,8 @@ const SignUpPage = () => {
   })
 
 const handleChange = (e) => {
+  console.log("Handle change called");
+  
   const {name, value} = e.target;
   setFormData(prev => ({
     ...prev,
@@ -22,10 +23,11 @@ const handleChange = (e) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault()
+  
   try{
     const response = await axios.post('http://localhost:5000/api/users/register', formData)
     console.log("Registered sucessfully!", response.data);
-    
+    Navigate('/dashboard')
   }
   catch (error) {
     console.log("Error creating account", error);
@@ -83,7 +85,7 @@ const handleSubmit = async (e) => {
           <h2 className='text-3xl font-bold text-slate-900 tracking-tight'>Create your account</h2>
           <p className='text-slate-500 text-sm mt-1'>Get started with your precision financial dashboard today.</p>
 
-          <form className='mt-6 flex flex-col gap-4' >
+          <form onSubmit={handleSubmit} className='mt-6 flex flex-col gap-4' >
             
             {/* Full Name Field */}
             <div className='flex flex-col gap-1.5'>
@@ -95,6 +97,9 @@ const handleSubmit = async (e) => {
                 <input 
                   type='text' 
                   placeholder='John Doe' 
+                  name='username'
+                  value={formData.username}
+                  onChange={handleChange}
                   className='w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-slate-300 text-slate-800' 
                 />
               </div>
@@ -110,6 +115,9 @@ const handleSubmit = async (e) => {
                 <input 
                   type='email' 
                   placeholder='name@company.com' 
+                  name='email'
+                  value={formData.email}
+                  onChange={handleChange}
                   className='w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-slate-300 text-slate-800' 
                 />
               </div>
@@ -125,6 +133,9 @@ const handleSubmit = async (e) => {
                 <input 
                   type='password' 
                   placeholder='Minimum 8 characters' 
+                  name='password'
+                  value={formData.password}
+                  onChange={handleChange}
                   className='w-full pl-11 pr-11 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-slate-300 text-slate-800' 
                 />
                 <svg className="w-5 h-5 absolute right-4 text-slate-400 cursor-pointer hover:text-slate-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -146,7 +157,7 @@ const handleSubmit = async (e) => {
             </div>
 
             {/* Primary Sign Up Button */}
-            <button onClick={handleSubmit} className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
+            <button type='submit' className='w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-600/10 mt-2'>
               Create Account
             </button>
           </form>
