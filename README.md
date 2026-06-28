@@ -1,6 +1,5 @@
 # Kosh - AI Powered Personal Finance & Trading
 
-![Kosh Logo](https://via.placeholder.com/200x80/4F46E5/FFFFFF?text=Kosh)
 
 ## 📊 About The Project
 
