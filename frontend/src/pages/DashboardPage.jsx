@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import jwt from 'jsonwebtoken';
 import Transaction from '../../../backend/src/models/Transaction';
 import User from '../../../backend/src/models/User';
 
 const DashboardPage = () => {
-  const [user] = useState({
-    username: 'User'
-  });
+  const [user, setUser] = useState([]);
 
   const stats = {
     balance: 12450.75,
