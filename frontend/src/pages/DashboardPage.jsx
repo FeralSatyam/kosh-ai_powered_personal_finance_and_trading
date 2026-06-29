@@ -1,12 +1,14 @@
+// frontend/src/pages/DashboardPage.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import jwt from 'jsonwebtoken';
-import Transaction from '../../../backend/src/models/Transaction';
-import User from '../../../backend/src/models/User';
 
 const DashboardPage = () => {
-  const [user, setUser] = useState([]);
+  // Mock user data - replace with actual user data later
+  const [user] = useState({
+    username: 'User'
+  });
 
+  // Mock data - replace with API calls later
   const stats = {
     balance: 12450.75,
     income: 8500.00,
