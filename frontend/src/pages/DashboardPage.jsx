@@ -13,13 +13,20 @@ const DashboardPage = () => {
     const fetchTransactionData = async(req, res) => {
       console.log("I am in fetchData function");
       
-      const response = await axios.get('http://localhost:5000/api/users/transaction');
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/transaction`);
       if (!response) console.log("Error loading data");
       
       const data = await response.json();
       console.log("data", data);
       
       setTransaction(data);
+    }
+
+    const fetchBalanceData = async(req, res) => {
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/balance`);
+      if (!response) console.log("Error loading balance data");
+      
+      
     }
 
     fetchTransactionData();
