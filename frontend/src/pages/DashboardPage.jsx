@@ -1,13 +1,35 @@
 // frontend/src/pages/DashboardPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
+
 
 const DashboardPage = () => {
   // Mock user data - replace with actual user data later
-  const [user] = useState({
-    username: 'User'
-  });
 
+  const [transaction, setTransaction] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactionData = async(req, res) => {
+      console.log("I am in fetchData function");
+      
+      const response = await axios.get('http://localhost:5000/api/users/transaction');
+      if (!response) console.log("Error loading data");
+      
+      const data = await response.json();
+      console.log("data", data);
+      
+      setTransaction(data);
+    }
+
+    fetchTransactionData();
+  })
+  
+
+
+  // const [user] = useState({
+  //   username: 
+  // });
   // Mock data - replace with API calls later
   const stats = {
     balance: 12450.75,

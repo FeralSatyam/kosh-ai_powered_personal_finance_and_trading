@@ -1,5 +1,5 @@
-import Transaction from "../models/Transaction";
-import User from "../models/User";
+import Transaction from "../models/Transaction.js";
+import User from "../models/User.js";
 
 export const transaction = async(req, res) => {
     try{
@@ -9,8 +9,6 @@ export const transaction = async(req, res) => {
         total_balance = total_balance - expense
 
         return res.status(200).json({message: 'Transaction complete'})
-        
-
 
     }
     catch (error){
