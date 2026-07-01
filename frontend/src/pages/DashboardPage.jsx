@@ -13,7 +13,7 @@ const DashboardPage = () => {
     const fetchTransactionData = async(req, res) => {
       console.log("I am in fetchData function");
       
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/transaction`);
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/dashboard`);
       if (!response) console.log("Error loading data");
       
       const data = await response.json();
@@ -26,7 +26,7 @@ const DashboardPage = () => {
       const response = await axios.get(`${process.env.BACKEND_URL}/api/users/balance`);
       if (!response) console.log("Error loading balance data");
       
-      
+
     }
 
     fetchTransactionData();
@@ -34,9 +34,7 @@ const DashboardPage = () => {
   
 
 
-  // const [user] = useState({
-  //   username: 
-  // });
+  
   // Mock data - replace with API calls later
   const stats = {
     balance: 12450.75,
