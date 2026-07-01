@@ -1,5 +1,3 @@
-// const express = require('express')
-// const cors = require('cors')
 import express from 'express'
 import cors from 'cors'
 import { configDotenv } from 'dotenv';
@@ -8,7 +6,7 @@ import User from './src/models/User.js';
 import { registerUser } from './src/controller/registerUser.js';
 import { loginUser } from './src/controller/loginUser.js';
 import { transaction } from './src/controller/transaction.js';
-import Balance from './src/models/Balance.js';
+
 const app = express()
 const PORT = 5000;
 
