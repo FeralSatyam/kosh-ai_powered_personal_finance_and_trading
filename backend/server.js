@@ -18,7 +18,6 @@ app.use(express.json());
 
 app.post('/api/users/register', registerUser);
 app.post('/api/users/login', loginUser);
-app.get('/api/users/transaction', transaction);
 
 
 app.listen(PORT, () => {
