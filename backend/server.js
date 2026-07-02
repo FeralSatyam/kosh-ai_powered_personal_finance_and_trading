@@ -4,7 +4,7 @@ import connectDB from './src/config/db.js';
 import User from './src/models/User.js';
 import { registerUser } from './src/controller/registerUser.js';
 import { loginUser } from './src/controller/loginUser.js';
-import { dashboardContoller } from './src/controller/dashboardController.js'
+import { getDashboardData } from './src/controller/dashboardController.js'
 
 const app = express()
 const PORT = 5000;
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.post('/api/users/register', registerUser);
 app.post('/api/users/login', loginUser);
-app.get('/api/users/dashboard', dashboardContoller);
+app.get('/api/users/dashboard', getDashboardData);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
