@@ -12,18 +12,23 @@ const generateToken = (userId) => {
 
 export const loginUser = async (req, res) => {
     try{
+        
         const { email, password } = req.body;
 
+        console.log("Data comming to backend");
+        
         if (!email || !password){
-            console.log("data not received");
             return res.status(400).json({message: 'All fields required!'})
         }
 
         const findUser = await User.findOne({email}).select('+password');
         if (findUser) {
+            console.log("User is found");
+            
             const correctPassword = await bcrypt.compare(password, findUser.password);
             
             if(correctPassword){
+                
                 const token = generateToken(findUser._id)
                 res.json({message: 'Login Sucessfull',
                     token,
@@ -40,6 +45,7 @@ export const loginUser = async (req, res) => {
         }
 
         else{
+            
             return res.status(401).json({message: 'User not found.'})
         }
     } catch (error){

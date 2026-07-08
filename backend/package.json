@@ -9,7 +9,7 @@
     "promisify": "^0.0.3"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js"
   },
   "name": "backend",
