@@ -1,7 +1,7 @@
 // frontend/src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
 
 
 const DashboardPage = () => {
@@ -10,23 +10,16 @@ const DashboardPage = () => {
   const [transaction, setTransaction] = useState([]);
 
   useEffect(() => {
-    const fetchTransactionData = async(req, res) => {
-      console.log("I am in fetchData function");
+    const fetchDashboardData = async(req, res) => {
+      console.log("I am in fetch dashboard data function");
       
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/dashboard`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/dashboard`);
       if (!response) console.log("Error loading data");
       
-      const data = await response.json();
+      const data = await response.json(); 
       console.log("data", data);
       
       setTransaction(data);
-    }
-
-    const fetchBalanceData = async(req, res) => {
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/users/balance`);
-      if (!response) console.log("Error loading balance data");
-      
-
     }
 
     fetchTransactionData();

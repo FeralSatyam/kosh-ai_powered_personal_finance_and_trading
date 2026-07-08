@@ -22,15 +22,12 @@ export const registerUser = async (req, res) => {
             password,
         })
         await newUser.save()
-
-        res.json({message: 'User created'})
         console.log("User created");
+        res.json({message: 'User created'})
+        
         
     }
     catch(error){
-        
-        console.log("Error caught");
-        
         res.status(400).json({message: 'Error creating user', error: error.message})
     }
 }
