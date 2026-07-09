@@ -7,7 +7,10 @@ import axios from 'axios';
 const DashboardPage = () => {
   // Mock user data - replace with actual user data later
 
-  const [transaction, setTransaction] = useState([]);
+  const [user, setUser] = useState(null)
+  const [stats, setStats] = useState([])
+  const [loading, setLoading] = useState(null)
+
 
   useEffect(() => {
     const fetchDashboardData = async(req, res) => {
@@ -16,10 +19,7 @@ const DashboardPage = () => {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/dashboard`);
       if (!response) console.log("Error loading data");
       
-      const data = await response.json(); 
-      console.log("data", data);
-      
-      setTransaction(data);
+     
     }
 
     fetchTransactionData();
@@ -29,12 +29,12 @@ const DashboardPage = () => {
 
   
   // Mock data - replace with API calls later
-  const stats = {
-    balance: 12450.75,
-    income: 8500.00,
-    expenses: 3200.25,
-    savings: 5300.50
-  };
+  // const stats = {
+  //   balance: 12450.75,
+  //   income: 8500.00,
+  //   expenses: 3200.25,
+  //   savings: 5300.50
+  // };
 
   const transactions = [
     { id: 1, description: 'Salary Deposit', amount: 5000, type: 'income', date: 'Jan 15, 2024', category: 'Income' },
