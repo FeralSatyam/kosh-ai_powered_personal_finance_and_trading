@@ -1,32 +1,74 @@
 // frontend/src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { getDashboardData } from '../api/getDashboardData.js'
 
 const DashboardPage = () => {
-  // Mock user data - replace with actual user data later
+  const navigate = useNavigate();
 
   const [user, setUser] = useState(null)
-  const [stats, setStats] = useState([])
   const [loading, setLoading] = useState(null)
+  const [stats, setStats] = useState({
+    balance: 0,
+    income: 0,
+    expense: 0,
+    savings: 0
+  });
+  const [transaction, setTrasaction] = useState([]);
 
-
+  
   useEffect(() => {
-    const fetchDashboardData = async(req, res) => {
-      console.log("I am in fetch dashboard data function");
-      
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/dashboard`);
-      if (!response) console.log("Error loading data");
-      
-     
+    const token = localStorage.getItem('token');
+    if(!token){
+      navigate('/login');
+      return;
     }
 
-    fetchTransactionData();
-  })
-  
+    const userData = localStorage.getItem('user');
+    if (userData){
+      try{
+        setUser(JSON.parse(userData));
+      }
+      catch(error){
+        console.error("Error parsing user data", error);
+      }
+    }
+
+    const fetchDashboardData = async (req, res) => {
+      try{
+        setLoading(true);
+        const data = await getDashboardData();
+
+        setStats({
+          balance: data.balance || 0,
+          income: data.income || 0,
+          expense: data.expense || 0,
+          savings: (data.balance || 0) - (data.expense || 0)
+        })
+
+        setTrasaction(data.transaction || []);
+        setLoading(false);
+
+      }
+      catch(error){
+        console.error("Error fetching dashboard data", error);
+      }
+    }
+
+  }, [navigate])
 
 
+  if (loading) {
+        return (
+            <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-[#4F46E5] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="text-[#4F46E5] text-lg">Loading your dashboard...</div>
+                </div>
+            </div>
+        );
+    }
   
   // Mock data - replace with API calls later
   // const stats = {
@@ -36,17 +78,7 @@ const DashboardPage = () => {
   //   savings: 5300.50
   // };
 
-  const transactions = [
-    { id: 1, description: 'Salary Deposit', amount: 5000, type: 'income', date: 'Jan 15, 2024', category: 'Income' },
-    { id: 2, description: 'Rent Payment', amount: -1200, type: 'expense', date: 'Jan 14, 2024', category: 'Housing' },
-    { id: 3, description: 'Groceries', amount: -150, type: 'expense', date: 'Jan 13, 2024', category: 'Food' },
-    { id: 4, description: 'Freelance Project', amount: 3500, type: 'income', date: 'Jan 12, 2024', category: 'Income' },
-    { id: 5, description: 'Utilities', amount: -200, type: 'expense', date: 'Jan 11, 2024', category: 'Utilities' },
-    { id: 6, description: 'Dinner Out', amount: -85, type: 'expense', date: 'Jan 10, 2024', category: 'Food' },
-    { id: 7, description: 'Investment Return', amount: 1500, type: 'income', date: 'Jan 09, 2024', category: 'Investment' },
-  ];
-
-  const recentTransactions = transactions.slice(0, 5);
+  const recentTransactions = transaction.slice(0, 5);
 
   const handleLogout = () => {
     // Just a placeholder - implement logout later
@@ -156,7 +188,7 @@ const DashboardPage = () => {
                 </svg>
               </div>
             </div>
-            <p className="text-2xl font-bold text-rose-600">${stats.expenses.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-rose-600">${stats.expense.toFixed(2)}</p>
             <p className="text-xs text-rose-600 mt-2">↑ 3.7% from last month</p>
           </div>
 

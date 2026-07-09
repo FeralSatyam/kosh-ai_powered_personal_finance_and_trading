@@ -1,9 +1,9 @@
 
+import api from "../api/axios.js";
 
-
-const fetchData = async (req, res) => {
+export const getDashboardData = async (req, res) => {
     try{
-        const responce = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/dashboard`);
+        const responce = await api.get('/dashboard');
         return responce.data;
     } 
     catch (error){
