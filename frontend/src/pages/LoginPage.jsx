@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    console.log("Handle change called");
+
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
