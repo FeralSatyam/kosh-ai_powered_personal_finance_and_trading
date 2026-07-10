@@ -69,14 +69,6 @@ const DashboardPage = () => {
             </div>
         );
     }
-  
-  // Mock data - replace with API calls later
-  // const stats = {
-  //   balance: 12450.75,
-  //   income: 8500.00,
-  //   expenses: 3200.25,
-  //   savings: 5300.50
-  // };
 
   const recentTransactions = transaction.slice(0, 5);
 
