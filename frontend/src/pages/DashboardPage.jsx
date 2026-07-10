@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getDashboardData } from '../api/getDashboardData.js'
+import TransactionModal from '../components/TransactionModal.jsx'
 
 const DashboardPage = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     balance: 0,
     income: 0,
@@ -16,6 +17,8 @@ const DashboardPage = () => {
     savings: 0
   });
   const [transaction, setTrasaction] = useState([]);
+  const[isModalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('income');
 
   
   useEffect(() => {
@@ -54,9 +57,14 @@ const DashboardPage = () => {
       catch(error){
         console.error("Error fetching dashboard data", error);
       }
+      finally{
+        setLoading(false);
+      }
     }
 
-  }, [navigate])
+    fetchDashboardData();
+
+  }, [])
 
 
   if (loading) {
@@ -72,6 +80,16 @@ const DashboardPage = () => {
   
 
   const recentTransactions = transaction.slice(0, 5);
+
+
+  const handleOpenModal = (type) => {
+    setModalType(type);
+    setModalOpen(true);
+  }
+  
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  }
 
   const handleLogout = () => {
     // Just a placeholder - implement logout later
@@ -202,7 +220,7 @@ const DashboardPage = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <button className="bg-[#4F46E5] text-white rounded-xl p-4 hover:bg-[#4338CA] transition-all shadow-sm flex items-center justify-center gap-2">
+          <button onClick={() => {handleOpenModal('income')}} className="bg-[#4F46E5] text-white rounded-xl p-4 hover:bg-[#4338CA] transition-all shadow-sm flex items-center justify-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -307,8 +325,19 @@ const DashboardPage = () => {
           </div>
         </div>
       </main>
+
+      <TransactionModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        // onSubmit={handleSubmitTransaction}
+        type={modalType} />
+
     </div>
+
+    
+    
   );
+  
 };
 
 export default DashboardPage;
