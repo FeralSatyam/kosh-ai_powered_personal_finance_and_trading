@@ -7,7 +7,7 @@ export const getDashboardData = async (req, res) => {
         const responce = await api.get('/users/dashboard');
         console.log("response received")
         
-        return res(responce)
+        return responce.data
     } 
     catch (error){
         console.log("Error getting dashboard data", error);
