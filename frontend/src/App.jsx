@@ -8,6 +8,8 @@ import SignUpPage from './pages/SignUp'
 import LandingPage from './pages/LandingPage'
 import DashboardPage from './pages/DashboardPage'
 import InsightsPage from './pages/InsightsPage'
+import TransactionsPage from './pages/TransactionsPage'
+import SettingsPage from './pages/SettingsPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,7 +23,8 @@ function App() {
         <Route path='/signup' element={<SignUpPage />} />
         <Route path='/dashboard' element={<DashboardPage />}></Route>
         <Route path='/insights' element={<InsightsPage />}></Route>
-
+        <Route path='/transactions' element={<TransactionsPage />}></Route>
+        <Route path='/settings' element={<SettingsPage />}></Route>
       </Routes>
 
     </BrowserRouter>
