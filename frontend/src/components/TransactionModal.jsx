@@ -14,7 +14,7 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
 
     const handleChange = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        // setLoading(true);    
             
         const { name, value } = e.target;
 
@@ -25,14 +25,35 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
     }
 
     const handleSubmit = async(e) => {
+        console.log("handle submit called");
+        
         e.preventDefault();
-        setLoading
-        const transactionData = {
-            ...formData,
-            amount: parseFloat(formData.amount),
-            type: type
-        };
-        await onSubmit(transactionData);
+        setLoading(true);
+        // const transactionData = {
+        //     ...formData,
+        //     amount: parseFloat(formData.amount),
+        //     type: type
+        // };
+
+        try{
+            const data = {
+                amount: parseFloat(formData.amount),
+                description: formData.description,
+                category: formData.category,
+                date: formData.date,
+                notes: formData.notes,
+                type: type  
+            }
+
+            await onSubmit(data);
+        }
+        catch(e){
+            console.error("Error submiting data", e);
+            
+        }
+        finally{
+            setLoading(false);
+        }
 
         setFormData({
             amount: '',
@@ -44,7 +65,7 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
         onClose();
     }
 
-    
+    if(!isOpen) return null;
 
     return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -126,6 +147,7 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
     </div>
 
     <button
+    onClick={handleSubmit}
     type="submit"
     disabled={loading}
     className={`w-full py-3 rounded-xl text-white font-semibold text-sm transition-all ${

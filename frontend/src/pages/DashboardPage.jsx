@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getDashboardData } from '../api/getDashboardData.js'
-// import TransactionModal from '../components/TransactionModal.jsx'
+import TransactionModal from '../components/TransactionModal.jsx'
+import { createTransaction, getTransaction } from '../api/transactions.js';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -88,9 +89,11 @@ const DashboardPage = () => {
   }
   
   const handleCloseModal = () => {
+    console.log("Before closeModal", isModalOpen)
     console.log("Handle Close MOdal called!");
     
     setisModalOpen(false);
+    console.log("After closeModal", isModalOpen)
   }
 
   const handleLogout = () => {
@@ -98,8 +101,35 @@ const DashboardPage = () => {
     console.log('Logout clicked');
   };
 
-  const handleSubmitTransaction = () => {
-      console.log("Testing");
+  const refreshDashboardData = async() => {
+    try{
+      setLoading(true);
+      setLoading(true);
+        const data = await getDashboardData();
+
+        setStats({
+          balance: data.balance || 0,
+          income: data.income || 0,
+          expense: data.expense || 0,
+          savings: (data.balance || 0) - (data.expense || 0)
+        })
+
+        setTrasaction(data.transaction || []);
+        setLoading(false);
+
+    } 
+    catch(e){
+      console.error("Error refreshing data", e);
+      
+    }
+  }
+
+  const handleSubmitTransaction = async(data) => {
+      const response = await createTransaction(data);
+      console.log("Transaction created, dashboard")
+      handleCloseModal();
+
+      await refreshDashboardData();
   }
 
   return (
@@ -160,7 +190,7 @@ const DashboardPage = () => {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">
-            Welcome back, {user?.username || 'User'}! 👋
+            Welcome back, {user?.username || 'User'}!
           </h1>
           <p className="text-slate-500 mt-1">Here's your financial overview for this month.</p>
         </div>
@@ -178,7 +208,7 @@ const DashboardPage = () => {
               </div>
             </div>
             <p className="text-2xl font-bold text-slate-900">${stats.balance.toFixed(2)}</p>
-            <p className="text-xs text-emerald-600 mt-2">↑ 12.5% from last month</p>
+            {/* <p className="text-xs text-emerald-600 mt-2">↑ 12.5% from last month</p> */}
           </div>
 
           {/* Income Card */}
@@ -192,7 +222,7 @@ const DashboardPage = () => {
               </div>
             </div>
             <p className="text-2xl font-bold text-emerald-600">${stats.income.toFixed(2)}</p>
-            <p className="text-xs text-emerald-600 mt-2">↑ 8.3% from last month</p>
+            {/* <p className="text-xs text-emerald-600 mt-2">↑ 8.3% from last month</p> */}
           </div>
 
           {/* Expenses Card */}
@@ -206,7 +236,7 @@ const DashboardPage = () => {
               </div>
             </div>
             <p className="text-2xl font-bold text-rose-600">${stats.expense.toFixed(2)}</p>
-            <p className="text-xs text-rose-600 mt-2">↑ 3.7% from last month</p>
+            {/* <p className="text-xs text-rose-600 mt-2">↑ 3.7% from last month</p> */}
           </div>
 
           {/* Savings Card */}
@@ -220,7 +250,7 @@ const DashboardPage = () => {
               </div>
             </div>
             <p className="text-2xl font-bold text-blue-600">${stats.savings.toFixed(2)}</p>
-            <p className="text-xs text-blue-600 mt-2">↑ 15.2% from last month</p>
+            {/* <p className="text-xs text-blue-600 mt-2">↑ 15.2% from last month</p> */}
           </div>
         </div>
 
@@ -232,7 +262,7 @@ const DashboardPage = () => {
             </svg>
             <span className="font-medium">Add Income</span>
           </button>
-          <button className="bg-rose-600 text-white rounded-xl p-4 hover:bg-rose-700 transition-all shadow-sm flex items-center justify-center gap-2">
+          <button onClick={() => {handleOpenModal('expense')}} className="bg-rose-600 text-white rounded-xl p-4 hover:bg-rose-700 transition-all shadow-sm flex items-center justify-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -332,11 +362,11 @@ const DashboardPage = () => {
         </div>
       </main>
 
-      {/* <TransactionModal
+      <TransactionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleSubmitTransaction}
-        type={modalType} /> */}
+        type={modalType} /> 
 
     </div>
     

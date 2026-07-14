@@ -4,7 +4,6 @@ import { promisify } from 'util'
 
 const verifyAsync = promisify(jwt.verify)
 export const authenticateToken = async(req, res, next) => {
-  console.log("Auth contoller called")
   const authHeader = req.headers['authorization'];
   
   const token= authHeader && authHeader.split(' ')[1];
@@ -21,9 +20,6 @@ export const authenticateToken = async(req, res, next) => {
     const userExist = await User.findById(payload.userId).select('-password');
     if(userExist){
       req.user = userExist
-      console.log("Auth controller user: ", userExist._id);
-      
-      console.log("Auth controller finishded")
       return next();
     }
     else{
