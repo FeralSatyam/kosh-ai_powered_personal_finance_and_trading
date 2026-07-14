@@ -305,7 +305,7 @@ const DashboardPage = () => {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">{transaction.description}</p>
+                      <p className="text-sm font-medium text-slate-900">{transaction.description ? transaction.description : transaction.type}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-xs text-slate-500">{transaction.category}</span>
                         <span className="w-1 h-1 rounded-full bg-slate-300"></span>
