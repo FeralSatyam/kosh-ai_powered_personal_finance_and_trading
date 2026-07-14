@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getDashboardData } from '../api/getDashboardData.js'
-import TransactionModal from '../components/TransactionModal.jsx'
+// import TransactionModal from '../components/TransactionModal.jsx'
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const DashboardPage = () => {
     savings: 0
   });
   const [transaction, setTrasaction] = useState([]);
-  const[isModalOpen, setModalOpen] = useState(false);
+  const[isModalOpen, setisModalOpen] = useState(false);
   const [modalType, setModalType] = useState('income');
 
   
@@ -36,7 +36,7 @@ const DashboardPage = () => {
       catch(error){
         console.error("Error parsing user data", error);
       }
-    }
+    }    
 
     const fetchDashboardData = async (req, res) => {
       try{
@@ -84,17 +84,23 @@ const DashboardPage = () => {
 
   const handleOpenModal = (type) => {
     setModalType(type);
-    setModalOpen(true);
+    setisModalOpen(true);
   }
   
   const handleCloseModal = () => {
-    setModalOpen(false);
+    console.log("Handle Close MOdal called!");
+    
+    setisModalOpen(false);
   }
 
   const handleLogout = () => {
     // Just a placeholder - implement logout later
     console.log('Logout clicked');
   };
+
+  const handleSubmitTransaction = () => {
+      console.log("Testing");
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -326,15 +332,13 @@ const DashboardPage = () => {
         </div>
       </main>
 
-      <TransactionModal
+      {/* <TransactionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        // onSubmit={handleSubmitTransaction}
-        type={modalType} />
+        onSubmit={handleSubmitTransaction}
+        type={modalType} /> */}
 
     </div>
-
-    
     
   );
   

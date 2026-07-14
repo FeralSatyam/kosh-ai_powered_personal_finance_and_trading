@@ -2,33 +2,37 @@ import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
 
 export const getDashboardData = async(req, res) => {
-
     try{
+        
         const user_id = req.user._id;
-
+        console.log("User Id: ", user_id);
+        
         if(!user_id) return res.status(404).json({message: 'User not found'});
-
-        const transaction = await Transaction.find({userId: user._id}).sort({date: -1});
+        
+        const transaction = await Transaction.find({user_id}).sort({date: -1});
         
         const incomePipeline = {
-            $match: {userId, type: 'income'}
+            
+            $match: {user_id, type: 'income'}
         }
 
         const incomeResult = await Transaction.aggregate([
-            {$match: {userId, type: 'income'}},
+            
+            {$match: {user_id, type: 'income'}},
             {$group: {_id: null, total: {$sum: '$amount'}}}
         ]);
 
         const expenseResult = await Transaction.aggregate([
-            {$match: {userId, type: 'expense'}},
+            {$match: {user_id, type: 'expense'}},
             {$group: {_id: null, total: {$sum: '$amount'}}}
         ]);
-
+        console.log("Dashboard data collected")
 
         const income = incomeResult[0]?.total || 0;
         const expense = expenseResult[0]?.total || 0;
         const balance = income - expense;
 
+        
         res.json({
             balance,
             income,

@@ -6,6 +6,7 @@ import User from './src/models/User.js';
 import { registerUser } from './src/controller/registerUser.js';
 import { loginUser } from './src/controller/loginUser.js';
 import { getDashboardData } from './src/controller/dashboardController.js'
+import { authenticateToken } from './src/controller/authController.js'
 
 const app = express()
 const PORT = 5000;
@@ -16,7 +17,8 @@ app.use(express.json());
 
 app.post('/api/users/register', registerUser);
 app.post('/api/users/login', loginUser);
-app.get('/api/users/dashboard', getDashboardData);
+console.log("Get dashboard data route called")
+app.get('/api/users/dashboard', authenticateToken, getDashboardData);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
