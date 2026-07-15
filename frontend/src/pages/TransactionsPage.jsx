@@ -30,7 +30,7 @@ const TransactionsPage = () => {
 
     const getTransactionData = async () => {
       const response = await getTransaction();
-      // console.log("Transaction page transaction: ", response)
+      // console.log("Transaction page category: ", response)
       setTransactions(response.transactions);
       // console.log("GetTrannsactiondata response", response.transactions)
     }
@@ -47,14 +47,6 @@ const TransactionsPage = () => {
     navigate('/login');
   };
 
-  // Mock data - replace with API data later
-  // const transactions = [
-  //   { id: 1, description: 'Salary Deposit', amount: 5000, type: 'income', category: 'Income', date: '2024-01-15' },
-  //   { id: 2, description: 'Rent Payment', amount: 1200, type: 'expense', category: 'Housing', date: '2024-01-14' },
-  //   { id: 3, description: 'Groceries', amount: 150, type: 'expense', category: 'Food', date: '2024-01-13' },
-  //   { id: 4, description: 'Freelance Project', amount: 3500, type: 'income', category: 'Income', date: '2024-01-12' },
-  //   { id: 5, description: 'Utilities', amount: 200, type: 'expense', category: 'Utilities', date: '2024-01-11' },
-  // ];
 
   const filteredTransactions = transactions.filter(t => {
     if (filter === 'income') return t.type === 'income';
@@ -134,12 +126,12 @@ const TransactionsPage = () => {
             <h1 className="text-2xl font-bold text-slate-900">Transactions</h1>
             <p className="text-slate-500 mt-1">View and manage all your financial transactions.</p>
           </div>
-          <button className="bg-[#4F46E5] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#4338CA] transition-all shadow-sm flex items-center gap-2 whitespace-nowrap">
+          {/* <button className="bg-[#4F46E5] text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-[#4338CA] transition-all shadow-sm flex items-center gap-2 whitespace-nowrap">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
             Add Transaction
-          </button>
+          </button> */}
         </div>
 
         {/* Filters */}
@@ -200,8 +192,8 @@ const TransactionsPage = () => {
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-100">
                 <tr>
-                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Description</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Category</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Description</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Date</th>
                   <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Amount</th>
                 </tr>
@@ -224,11 +216,11 @@ const TransactionsPage = () => {
                             </svg>
                           )}
                         </div>
-                        <span className="text-sm font-medium text-slate-900">{transaction.description}</span>
+                        <span className="text-sm font-medium text-slate-900">{transaction.category}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-slate-600">{transaction.category}</span>
+                      <span className="text-sm text-slate-600">{transaction.description}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-sm text-slate-600">{new Date(transaction.date).toLocaleDateString()}</span>

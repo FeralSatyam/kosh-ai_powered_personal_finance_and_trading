@@ -7,7 +7,7 @@ export const createTransaction = async (req, res) => {
         console.log("User_id Transaction: ", userId);
         
         const { amount, description, category, date, notes, type } = req.body;
-        // console.log("TransactionController category", category);
+        console.log("TransactionController category", category);
         
         if(!userId) return res.status(404).json({message: 'User not found'});
 
@@ -20,7 +20,7 @@ export const createTransaction = async (req, res) => {
             userId,
             amount,
             description,
-            category: category || 'other',
+            category: category || 'Data not recieved on category',
             date: date || new Date(),
             notes: notes || '',
             type
@@ -41,6 +41,7 @@ export const getTransaction = async(req, res) => {
     try{
         const userId = req.user._id;
         const transactions = await Transaction.find({userId}).sort({date: -1})
+        // console.log("TransactionController ", transactions);
         res.json({transactions});
     }
     catch(e){

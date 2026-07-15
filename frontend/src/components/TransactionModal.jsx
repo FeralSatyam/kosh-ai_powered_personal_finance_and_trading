@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
 const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
+    const categories = ['Food', 'Rent', 'Utilities', 'Entertainment', 
+    'Transport', 'Shopping', 'Healthcare', 'Education', 'Income', 'Other'];
     const [formData, setFormData] = useState({
         amount: '',
         description: '',
-        category: '',
+        category: categories[0],
         date: new Date().toISOString().split('T')[0],
         notes: ''
     });
     const [loading, setLoading] = useState(false);
-    const categories = ['Food', 'Rent', 'Utilities', 'Entertainment', 
-    'Transport', 'Shopping', 'Healthcare', 'Education', 'Income', 'Other'];
+    
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -29,11 +30,6 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
         
         e.preventDefault();
         setLoading(true);
-        // const transactionData = {
-        //     ...formData,
-        //     amount: parseFloat(formData.amount),
-        //     type: type
-        // };
 
         try{
             const data = {
