@@ -1,11 +1,18 @@
 // frontend/src/pages/InsightsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getDashboardData } from '../api/getDashboardData';
 
 const InsightsPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    balance: 0,
+    income: 0,
+    expense: 0,
+    savings: 0
+  })
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -22,7 +29,21 @@ const InsightsPage = () => {
         console.error("Error parsing user data", error);
       }
     }
+
+    const dashboardData = async() => {
+      const data = await getDashboardData();
+      setUser(data.user);
+      setStats({
+        balance: data.balance || 0,
+        income: data.income || 0,
+        expense: data.expense || 0,
+        savings: (data.income - data.expense) || 0
+      })
+    }
+
     setLoading(false);
+    dashboardData();
+
   }, [navigate]);
 
   const handleLogout = () => {
@@ -112,7 +133,7 @@ const InsightsPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <p className="text-2xl font-bold text-slate-900">$8,500.00</p>
+            <p className="text-2xl font-bold text-slate-900">{stats.income}</p>
             <p className="text-xs text-emerald-600 mt-1">↑ 8.3% from last month</p>
           </div>
 
@@ -123,7 +144,7 @@ const InsightsPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
               </svg>
             </div>
-            <p className="text-2xl font-bold text-slate-900">$3,240.50</p>
+            <p className="text-2xl font-bold text-slate-900">{stats.expense}</p>
             <p className="text-xs text-rose-600 mt-1">↑ 3.7% from last month</p>
           </div>
 
