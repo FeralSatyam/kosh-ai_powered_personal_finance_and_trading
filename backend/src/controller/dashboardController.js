@@ -5,7 +5,7 @@ export const getDashboardData = async(req, res) => {
     try{
         
         const userId = req.user._id;
-        console.log("User Id: ", userId);
+        // console.log("User Id: ", userId);
         
         if(!userId) return res.status(404).json({message: 'User not found'});
         
@@ -26,13 +26,13 @@ export const getDashboardData = async(req, res) => {
             {$match: {userId, type: 'expense'}},
             {$group: {_id: null, total: {$sum: '$amount'}}}
         ]);
-        console.log("Dashboard data collected")
+        // console.log("Dashboard data collected")
 
         const income = incomeResult[0]?.total || 0;
         const expense = expenseResult[0]?.total || 0;
         const balance = income - expense;
 
-        console.log("Dashboard data", income, expense, balance);
+        // console.log("Dashboard data", income, expense, balance);
         
         
         res.json({

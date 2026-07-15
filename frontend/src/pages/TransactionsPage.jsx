@@ -1,6 +1,8 @@
 // frontend/src/pages/TransactionsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, resolvePath, useNavigate } from 'react-router-dom';
+import { getTransaction } from '../api/transactions';
+
 
 const TransactionsPage = () => {
   const navigate = useNavigate();
@@ -8,6 +10,7 @@ const TransactionsPage = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -24,7 +27,18 @@ const TransactionsPage = () => {
         console.error("Error parsing user data", error);
       }
     }
+
+    const getTransactionData = async () => {
+      const response = await getTransaction();
+      // console.log("Transaction page transaction: ", response)
+      setTransactions(response.transactions);
+      // console.log("GetTrannsactiondata response", response.transactions)
+    }
+    
+
     setLoading(false);
+
+    getTransactionData();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -34,13 +48,13 @@ const TransactionsPage = () => {
   };
 
   // Mock data - replace with API data later
-  const transactions = [
-    { id: 1, description: 'Salary Deposit', amount: 5000, type: 'income', category: 'Income', date: '2024-01-15' },
-    { id: 2, description: 'Rent Payment', amount: 1200, type: 'expense', category: 'Housing', date: '2024-01-14' },
-    { id: 3, description: 'Groceries', amount: 150, type: 'expense', category: 'Food', date: '2024-01-13' },
-    { id: 4, description: 'Freelance Project', amount: 3500, type: 'income', category: 'Income', date: '2024-01-12' },
-    { id: 5, description: 'Utilities', amount: 200, type: 'expense', category: 'Utilities', date: '2024-01-11' },
-  ];
+  // const transactions = [
+  //   { id: 1, description: 'Salary Deposit', amount: 5000, type: 'income', category: 'Income', date: '2024-01-15' },
+  //   { id: 2, description: 'Rent Payment', amount: 1200, type: 'expense', category: 'Housing', date: '2024-01-14' },
+  //   { id: 3, description: 'Groceries', amount: 150, type: 'expense', category: 'Food', date: '2024-01-13' },
+  //   { id: 4, description: 'Freelance Project', amount: 3500, type: 'income', category: 'Income', date: '2024-01-12' },
+  //   { id: 5, description: 'Utilities', amount: 200, type: 'expense', category: 'Utilities', date: '2024-01-11' },
+  // ];
 
   const filteredTransactions = transactions.filter(t => {
     if (filter === 'income') return t.type === 'income';

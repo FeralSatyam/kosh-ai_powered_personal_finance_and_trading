@@ -44,7 +44,8 @@ const TransactionModal = ({isOpen, onClose, onSubmit, type}) => {
                 notes: formData.notes,
                 type: type  
             }
-
+            console.log("Transaction MOdal category: ", data.category);
+            
             await onSubmit(data);
         }
         catch(e){

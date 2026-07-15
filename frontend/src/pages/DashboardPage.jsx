@@ -52,6 +52,7 @@ const DashboardPage = () => {
         })
 
         setTrasaction(data.transaction || []);
+        // console.log("Dashboard transaction", data.transaction)
         setLoading(false);
 
       }
@@ -89,11 +90,11 @@ const DashboardPage = () => {
   }
   
   const handleCloseModal = () => {
-    console.log("Before closeModal", isModalOpen)
-    console.log("Handle Close MOdal called!");
+    // console.log("Before closeModal", isModalOpen)
+    // console.log("Handle Close MOdal called!");
     
     setisModalOpen(false);
-    console.log("After closeModal", isModalOpen)
+    // console.log("After closeModal", isModalOpen)
   }
 
   const handleLogout = () => {
@@ -115,6 +116,7 @@ const DashboardPage = () => {
         })
 
         setTrasaction(data.transaction || []);
+        
         setLoading(false);
 
     } 
@@ -126,7 +128,7 @@ const DashboardPage = () => {
 
   const handleSubmitTransaction = async(data) => {
       const response = await createTransaction(data);
-      console.log("Transaction created, dashboard")
+      // console.log("Transaction created, dashboard")
       handleCloseModal();
 
       await refreshDashboardData();
@@ -305,7 +307,7 @@ const DashboardPage = () => {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">{transaction.description ? transaction.description : transaction.type}</p>
+                      <p className="text-sm font-medium text-slate-900">{transaction.category}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-xs text-slate-500">{transaction.category}</span>
                         <span className="w-1 h-1 rounded-full bg-slate-300"></span>
